@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 0eb48b2f4e098674cb11add37a83799f
+timeCreated: 1510563579
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: crayon kids
+  fontNames:
+  - crayon kids
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

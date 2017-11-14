@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: b1f35c91100b3244fa82bc858ad58907
+timeCreated: 1510563579
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: ChildishKid
+  fontNames:
+  - ChildishKid
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
