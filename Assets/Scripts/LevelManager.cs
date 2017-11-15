@@ -13,6 +13,9 @@ public class LevelManager : MonoBehaviour {
 	private string secondAddend;
 	private int secondInt=1;
 	public int goalSum;
+	private int runningTotal;
+	private int recentPop;
+
 	public List<GameObject> activeBalloons = new List<GameObject> ();
 
 	//true if further mouseclicks need to wait for the "Correct!" sound bytes and animations to complete
@@ -50,13 +53,16 @@ public class LevelManager : MonoBehaviour {
 		Time.timeScale = 1f;
 		firstPop=false;
 		correctWait = true;
-		firstAddend="_";
-		secondAddend="_";
+		firstAddend="";
+		secondAddend="";
 		secondInt = 1;
 		scoreNumber = 0;
 		scoreText.text = "score: " + scoreNumber;
 		goalSum = Random.Range (2, 10);
-		updateEquation ();
+		runningTotal = 0;
+		//updateEquation ();
+		updateEquation2(0);
+		recentPop = 0;
 
 		menuPanel.SetActive (false);
 
@@ -74,42 +80,49 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	//Called when a balloon has been popped. Updates the addends and calls a check to see if equation is correct
-	//if two balloons have recently been popped
+	//if two balloons have recently been popped.
 	public void processPop(int balloonValue){
-
-		//enter if first balloon already popped and second has just been popped
-		if(firstPop){
-			secondAddend = balloonValue.ToString();
-			secondInt = balloonValue;
-			SoundManager.instance.RandomizeTuffySfx (numberSounds[balloonValue-1]);
-			updateEquation ();
-			//check if equation is accurate and add sum to score if equation is true
-			if(int.Parse(firstAddend) + int.Parse(secondAddend) == goalSum){
-				StartCoroutine ("correctAnswer");
-			}
-			else{
-				StartCoroutine ("wrongAnswer");
-				firstAddend = "_";
-				secondAddend = "_";
-				updateEquation ();
-			}
-
-			//reset popped balloon flag
-			firstPop = false;
-
-		}
-		//enter if only the first balloon for the equation has been popped
-		else{
-			firstAddend = balloonValue.ToString();
-			SoundManager.instance.RandomizeTuffySfx (numberSounds[balloonValue-1]);
-			updateEquation ();
-			firstPop = true;
+		recentPop = balloonValue;
+		runningTotal += balloonValue;
+		if (runningTotal < goalSum) {
+			StartCoroutine ("addedNumber");
+			updateEquation2 (balloonValue);
+		} 
+		else if (runningTotal > goalSum) {
+			StartCoroutine ("wrongAnswer");
+		} 
+		else {
+			updateEquation2 (-1);
+			StartCoroutine ("correctAnswer");
 		}
 	}
 
-	private void updateEquation () {
-		
-		equation.text = (firstAddend + " + " + secondAddend + " = " + goalSum);
+	//updates the equation based on the most recent pop. 
+	/* param: val :  0 means  the equation is new. In that case, the equation will be updated to just " = [goal number]". Also update active balloon numbers.
+	 * 			 	-1 means the equation is completed. 
+	 * 				else, the equation is updated with a new addend.*/
+	private void updateEquation2(int val){
+		if (val == 0) {
+
+			foreach(var balloon in activeBalloons){
+				string balloonNumber = (Random.Range (1,goalSum)).ToString();
+				TextMesh textMeshComponent=balloon.GetComponentInChildren(typeof(TextMesh)) as TextMesh;
+				textMeshComponent.text = balloonNumber;
+				balloon.GetComponent<InitialVelocity>().balloonValue = int.Parse(balloonNumber);
+			}
+
+			firstAddend = "";
+			runningTotal = 0;
+			equation.text = " = " + goalSum;
+			secondAddend = equation.text;
+		} 
+		else if (val == -1) {
+			equation.text = firstAddend + recentPop + secondAddend;
+		}
+		else {
+			firstAddend += val + " + ";
+			equation.text = firstAddend + secondAddend;
+		}
 	}
 
 	public void menuButton(){
@@ -139,7 +152,7 @@ public class LevelManager : MonoBehaviour {
 		correctWait = true;
 		SoundManager.instance.RandomizeTuffySfx (plusSound);
 		yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length + 0.2f);
-		SoundManager.instance.RandomizeTuffySfx (numberSounds [secondInt-1]);
+		SoundManager.instance.RandomizeTuffySfx (numberSounds [recentPop-1]);
 		yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length + 0.2f);
 		SoundManager.instance.RandomizeTuffySfxEqual (equalSound);
 		yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length);
@@ -149,9 +162,10 @@ public class LevelManager : MonoBehaviour {
 		yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length);
 		AddToScore(goalSum);
 		goalSum = Random.Range(2, 10);
-		firstAddend = "_";
-		secondAddend = "_";
-		updateEquation ();
+		firstAddend = "";
+		secondAddend = "";
+		//updateEquation ();
+		updateEquation2(0);
 		//allow popped balloons to be added to the equation again.
 		if (firstEnter) {
 			StartCoroutine ("explainGame");
@@ -166,10 +180,24 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	IEnumerator wrongAnswer(){
+		updateEquation2(0);
 		int coin = Random.Range (0, 2);
 		if (coin == 0) {
 			SoundManager.instance.RandomizeTuffySfx (uhOhSound, tryAgainSound);
 			yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length);
+		}
+	}
+
+	IEnumerator addedNumber(){
+		if (runningTotal == recentPop) {
+			SoundManager.instance.RandomizeTuffySfx (numberSounds [recentPop - 1]);
+			yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length + 0.2f);
+		}
+		else {
+			SoundManager.instance.RandomizeTuffySfx (plusSound);
+			yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length);
+			SoundManager.instance.RandomizeTuffySfx (numberSounds [recentPop-1]);
+			yield return new WaitForSeconds (SoundManager.instance.tuffySource.clip.length + 0.2f);
 		}
 	}
 		
