@@ -6,9 +6,10 @@ using UnityEngine.Rendering;
 
 public class resize : MonoBehaviour {
 
-	void Start(){
+	void Awake(){
 		ResizeSpriteToScreen ();
 	}
+
 	void ResizeSpriteToScreen(){
 		SpriteRenderer sr = GetComponent<SpriteRenderer>();
 

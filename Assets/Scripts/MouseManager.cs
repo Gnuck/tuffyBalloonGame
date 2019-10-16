@@ -34,9 +34,9 @@ public class MouseManager : MonoBehaviour {
 						//do nothing
 					}
 					else{
-						//skip processing the pop for equation purposes if the "Correct!" animation is still active
+                        //skip processing the pop for equation purposes if the "Correct!" animation is still active
 						if(!gameLevelManager.correctWait){
-							gameLevelManager.processPop (hit.collider.GetComponent<InitialVelocity> ().balloonValue);
+                            gameLevelManager.processPop (hit.collider.GetComponent<InitialVelocity> ().balloonValue);
 						}
 						hit.collider.GetComponent<Animator>().SetBool("popped",true);
 					}
