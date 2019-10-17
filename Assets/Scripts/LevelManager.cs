@@ -9,8 +9,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LevelManager : MonoBehaviour {
 
+    public enum LevelMode { Letters, Numbers, Addition };
+    public static LevelMode levelMode;
+
 	public Text scoreText;
-	public Text equation;
+    public GameObject equation;
 	public int scoreNumber;
 	private string firstAddend;
 	private string secondAddend;
@@ -118,25 +121,30 @@ public class LevelManager : MonoBehaviour {
 
 			firstAddend = "";
 			runningTotal = 0;
-			equation.text = " = " + goalSum;
-			secondAddend = equation.text;
+            equation.GetComponent<TMPro.TextMeshProUGUI>().text = " = " + goalSum;
+            secondAddend = equation.GetComponent<TMPro.TextMeshProUGUI>().text;
 		} 
 		else if (correct) {
-			equation.text = firstAddend + val + secondAddend;
-		}
+            equation.GetComponent<TMPro.TextMeshProUGUI>().text = firstAddend + val + secondAddend;
+
+        }
 		else {
 			firstAddend += val + " + ";
-			equation.text = firstAddend + secondAddend;
-		}
+            equation.GetComponent<TMPro.TextMeshProUGUI>().text = firstAddend + secondAddend; 
+        }
 	}
 
 	public void menuButton(){
-		Time.timeScale = 0f;
-		menuPanel.SetActive (true);
+        menuPanel.SetActive(!menuPanel.activeInHierarchy);
+        if (menuPanel.activeInHierarchy) {
+            Time.timeScale = 0f;
+        } else {
+            Time.timeScale = 1f;
+        }
 
-	}
+    }
 
-	public void resumeButton(){
+    public void resumeButton(){
 		menuPanel.SetActive (false);
 		Time.timeScale = 1f;
 	}

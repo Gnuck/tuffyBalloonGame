@@ -5,7 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class changeScene : MonoBehaviour {
 
+    public GameObject levelSelectButton;
+
 	public void changeToScene(int sceneToChangeTo){
-		SceneManager.LoadScene ("balloon_scene");
+        levelSelectButton.SetActive(!levelSelectButton.activeInHierarchy);
+		//SceneManager.LoadScene ("balloon_scene");
 	}
 }

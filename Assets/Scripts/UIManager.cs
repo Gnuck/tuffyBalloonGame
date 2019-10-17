@@ -47,4 +47,22 @@ public class UIManager : MonoBehaviour
         SoundManager.instance.QuitGame();
         SceneManager.LoadScene("title_scene");
     }
+
+    public void startLetters()
+    {
+        LevelManager.levelMode = LevelManager.LevelMode.Letters;
+        SceneManager.LoadScene("balloon_scene");
+    }
+
+    public void startNumbers()
+    {
+        LevelManager.levelMode = LevelManager.LevelMode.Numbers;
+        SceneManager.LoadScene("balloon_scene");
+    }
+
+    public void startAddition()
+    {
+        LevelManager.levelMode = LevelManager.LevelMode.Addition;
+        SceneManager.LoadScene("balloon_scene");
+    }
 }
