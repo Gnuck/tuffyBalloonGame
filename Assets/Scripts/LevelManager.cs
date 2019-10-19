@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour {
     public enum LevelMode { Letters, Numbers, Addition };
     public static LevelMode levelMode;
 
-	public Text scoreText;
+    public GameObject scoreObj;
     public GameObject equation;
 	public int scoreNumber;
 	private string firstAddend;
@@ -44,7 +44,7 @@ public class LevelManager : MonoBehaviour {
         secondAddend = "";
         secondInt = 1;
         scoreNumber = 0;
-        scoreText.text = "score: " + scoreNumber;
+        scoreObj.GetComponent<TMPro.TextMeshProUGUI>().text = scoreNumber.ToString();
         goalSum = Random.Range(2, 10);
         runningTotal = 0;
         updateEquation (0, false);
@@ -71,12 +71,12 @@ public class LevelManager : MonoBehaviour {
 
 	public void AddToScore(int points){
 		scoreNumber += points;
-		scoreText.text = "score: " + scoreNumber;
-	}
+        scoreObj.GetComponent<TMPro.TextMeshProUGUI>().text = scoreNumber.ToString();
+    }
 
-	//Called when a balloon has been popped. Updates the addends and calls a check to see if equation is correct
-	//if two balloons have recently been popped.
-	public void processPop(int balloonValue){
+    //Called when a balloon has been popped. Updates the addends and calls a check to see if equation is correct
+    //if two balloons have recently been popped.
+    public void processPop(int balloonValue){
 		runningTotal += balloonValue;
         Debug.Log("runningtotal: " + runningTotal);
         Debug.Log("ballonValue: " + balloonValue);
